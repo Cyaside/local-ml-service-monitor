@@ -58,8 +58,59 @@ def _load_foundation(path):
     return model, metadata
 
 
-def calibrate(foundation_path, baseline_path, out, threshold_quantile=.995):
-    """Attach a local normal profile and false-alarm threshold; no model refit."""
+def _adapt(model, baseline_x, validation_path, reference, service_id):
+    """Add a small supervised local layer to the public booster."""
+    frame = read_data(validation_path)
+    if set(frame.service_id) != {service_id}:
+        raise ValueError("Validation service does not match baseline")
+    if not {"phase", "fault_id"}.issubset(frame.columns):
+        raise ValueError("Validation requires phase and fault_id annotations")
+    if not set(frame.phase).issubset({"normal", "fault", "recovery", "idle"}):
+        raise ValueError("Unknown validation phase")
+    validation_x, indices = prepare(frame, reference)
+    rows = frame.iloc[indices]
+    keep = rows.phase.isin({"normal", "fault"}).to_numpy()
+    labels = rows.phase.eq("fault").to_numpy(dtype=np.int8)[keep]
+    if labels.sum() < 20 or (labels == 0).sum() < 20:
+        raise ValueError("Validation needs at least 20 scored fault and normal rows")
+    fault_count = rows.loc[rows.phase.eq("fault"), "fault_id"].nunique()
+    if fault_count < 2:
+        raise ValueError("Validation needs at least two distinct faults")
+    x = np.r_[baseline_x, validation_x[keep]]
+    y = np.r_[np.zeros(len(baseline_x), dtype=np.int8), labels]
+    positive_weight = float((y == 0).sum() / (y == 1).sum())
+    adapted = XGBClassifier(
+        n_estimators=80,
+        learning_rate=.03,
+        max_depth=4,
+        min_child_weight=2,
+        subsample=.85,
+        colsample_bytree=.9,
+        reg_alpha=.05,
+        reg_lambda=2.0,
+        max_bin=256,
+        objective="binary:logistic",
+        eval_metric="aucpr",
+        tree_method="hist",
+        device="cpu",
+        n_jobs=1,
+        scale_pos_weight=positive_weight,
+        random_state=42,
+    )
+    adapted.fit(x, y, xgb_model=model.get_booster(), verbose=False)
+    return adapted, {
+        "file": str(Path(validation_path).resolve()),
+        "sha256": hashlib.sha256(Path(validation_path).read_bytes()).hexdigest(),
+        "rows": len(x),
+        "positive_rows": int(y.sum()),
+        "faults": int(fault_count),
+        "added_rounds": 80,
+    }
+
+
+def calibrate(foundation_path, baseline_path, out, threshold_quantile=.995,
+              validation_path=None):
+    """Adapt one public booster, then attach a local profile and threshold."""
     began = time.perf_counter()
     out = Path(out)
     if out.exists():
@@ -76,6 +127,11 @@ def calibrate(foundation_path, baseline_path, out, threshold_quantile=.995):
     x, indices = prepare(frame, reference)
     if len(x) < 256:
         raise ValueError("Baseline needs at least 286 consecutive valid rows")
+    adaptation = None
+    if validation_path:
+        model, adaptation = _adapt(
+            model, x, validation_path, reference, str(frame.service_id.iloc[0]),
+        )
     with threadpool_limits(limits=1):
         scores = model.predict_proba(x)[:, 1]
     threshold = float(np.quantile(scores, threshold_quantile))
@@ -109,6 +165,7 @@ def calibrate(foundation_path, baseline_path, out, threshold_quantile=.995):
             "rows": len(frame),
             "feature_rows": len(x),
         },
+        "local_adaptation": adaptation,
         "foundation": foundation,
         "sklearn_version": sklearn.__version__,
         "xgboost_version": xgboost.__version__,

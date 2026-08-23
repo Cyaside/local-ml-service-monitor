@@ -1,0 +1,198 @@
+{
+  "model_version": "checkout-universal-v1",
+  "model_family": "XGBClassifier",
+  "test_sources": [
+    "measured"
+  ],
+  "input_sha256": "9046ccf6b11985516fb472262bcdf1f605fbabcdccc3e514ed2c3f4000f5c102",
+  "ml": {
+    "faults_detected": 5,
+    "faults_total": 5,
+    "incident_recall": 1.0,
+    "false_incidents": 0,
+    "observable_normal_hours": 0.24937055555555465,
+    "false_incidents_per_hour": 0.0,
+    "coverage": 0.9269311064718163,
+    "median_detection_delay_seconds": 60.752787,
+    "unmatched_non_normal_incidents": 2,
+    "per_fault": [
+      {
+        "fault_id": "74dbbe54-0e1d-4516-9d56-210b7353c5a7",
+        "detected": true,
+        "delay_seconds": 60.752787
+      },
+      {
+        "fault_id": "773c5461-a58f-4c33-a8f0-e04be46445c6",
+        "detected": true,
+        "delay_seconds": 171.804599
+      },
+      {
+        "fault_id": "df82e00d-5031-40aa-ae1f-fbd650a2cedc",
+        "detected": true,
+        "delay_seconds": 30.266444
+      },
+      {
+        "fault_id": "9d8984a0-2686-477a-a03e-ee2e11c0bfcc",
+        "detected": true,
+        "delay_seconds": 242.441892
+      },
+      {
+        "fault_id": "f0ca07f3-7a10-40a3-b409-cd8e10d5f148",
+        "detected": true,
+        "delay_seconds": 40.364806
+      }
+    ],
+    "incidents": [
+      {
+        "id": "609feecc-9cd7-4c7f-9670-f1485c885015",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T11:26:41.748207Z",
+        "opened_index": 124,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T11:28:43.068065Z",
+        "last_seen_at": "2026-09-19T11:28:43.068065Z",
+        "peak_score": null
+      },
+      {
+        "id": "1d01172d-af56-4018-9609-05e7a8b530d7",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T11:39:30.221190Z",
+        "opened_index": 200,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T11:41:30.962579Z",
+        "last_seen_at": "2026-09-19T11:41:30.962579Z",
+        "peak_score": null
+      },
+      {
+        "id": "052552cc-c13e-40a2-8070-f8e4afbfb312",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T11:49:05.109370Z",
+        "opened_index": 257,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T11:53:47.744275Z",
+        "last_seen_at": "2026-09-19T11:53:47.744275Z",
+        "peak_score": null
+      },
+      {
+        "id": "babc3d22-a876-4fc9-afd0-a9658615aa79",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T12:03:33.359466Z",
+        "opened_index": 343,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T12:06:04.742315Z",
+        "last_seen_at": "2026-09-19T12:06:04.742315Z",
+        "peak_score": null
+      },
+      {
+        "id": "5032cc27-2bc0-4ce6-ad5d-4214711f5252",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T12:06:55.195752Z",
+        "opened_index": 363,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T12:09:57.445364Z",
+        "last_seen_at": "2026-09-19T12:09:57.445364Z",
+        "peak_score": null
+      },
+      {
+        "id": "7b738b84-3386-49f8-a4b3-9ad16a84185b",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T12:13:19.398502Z",
+        "opened_index": 401,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T12:16:51.287094Z",
+        "last_seen_at": "2026-09-19T12:16:51.287094Z",
+        "peak_score": null
+      },
+      {
+        "id": "b7530e36-e406-45d0-b2e1-43042dfdc08d",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T12:24:46.375213Z",
+        "opened_index": 469,
+        "status": "OPEN",
+        "ended_at": null,
+        "last_seen_at": "2026-09-19T12:25:26.845650Z",
+        "peak_score": null
+      }
+    ]
+  },
+  "baseline": {
+    "faults_detected": 3,
+    "faults_total": 5,
+    "incident_recall": 0.6,
+    "false_incidents": 0,
+    "observable_normal_hours": 0.24937055555555465,
+    "false_incidents_per_hour": 0.0,
+    "coverage": 0.9269311064718163,
+    "median_detection_delay_seconds": 40.289333,
+    "unmatched_non_normal_incidents": 0,
+    "per_fault": [
+      {
+        "fault_id": "74dbbe54-0e1d-4516-9d56-210b7353c5a7",
+        "detected": true,
+        "delay_seconds": 30.252337
+      },
+      {
+        "fault_id": "773c5461-a58f-4c33-a8f0-e04be46445c6",
+        "detected": false,
+        "delay_seconds": null
+      },
+      {
+        "fault_id": "df82e00d-5031-40aa-ae1f-fbd650a2cedc",
+        "detected": true,
+        "delay_seconds": 40.289333
+      },
+      {
+        "fault_id": "9d8984a0-2686-477a-a03e-ee2e11c0bfcc",
+        "detected": true,
+        "delay_seconds": 91.202753
+      },
+      {
+        "fault_id": "f0ca07f3-7a10-40a3-b409-cd8e10d5f148",
+        "detected": false,
+        "delay_seconds": null
+      }
+    ],
+    "incidents": [
+      {
+        "id": "c5205baa-65e0-4818-9bf2-af210d43165f",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T11:26:11.247757Z",
+        "opened_index": 121,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T11:27:22.083111Z",
+        "last_seen_at": "2026-09-19T11:27:22.083111Z",
+        "peak_score": null
+      },
+      {
+        "id": "641e15b6-b44a-43d1-a4fd-4c4aadac10c7",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T11:49:15.132259Z",
+        "opened_index": 258,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T11:52:26.928953Z",
+        "last_seen_at": "2026-09-19T11:52:26.928953Z",
+        "peak_score": null
+      },
+      {
+        "id": "498072c7-c1bb-47c6-944b-f9e9c5b92549",
+        "service_id": "checkout-local",
+        "run_id": "9528a6a2-cf7d-46f0-acda-916b74395cf3",
+        "opened_at": "2026-09-19T12:01:02.120327Z",
+        "opened_index": 328,
+        "status": "RESOLVED",
+        "ended_at": "2026-09-19T12:05:24.459369Z",
+        "last_seen_at": "2026-09-19T12:05:24.459369Z",
+        "peak_score": null
+      }
+    ]
+  }
+}

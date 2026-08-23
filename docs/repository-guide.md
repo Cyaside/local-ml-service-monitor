@@ -10,7 +10,7 @@
 | `tests/` | Automated verification |
 | `scripts/` | Reproducible recording and launch commands |
 | `notebooks/` | Google Colab public-model training |
-| `docs/`, `README.md` | Public system documentation |
+| `docs/`, `README.md` | System documentation and the published evaluation summary |
 | `pyproject.toml`, `uv.lock`, `.python-version` | Reproducible Python environment |
 | `.gitignore`, `.gitattributes`, `.editorconfig` | Repository and editor rules |
 | `Dockerfile`, `compose.yaml`, `.dockerignore`, `.github/` | Packaging and CI |
@@ -61,7 +61,9 @@ git status --short
 git diff --cached --name-only
 ```
 
-Public and local evaluation reports remain under ignored `reports/`. No license
-has been selected for the project source. PSM retains its CC BY 4.0 data license,
-and public data is downloaded from its original repository rather than copied
-into this repository.
+Generated evaluation output remains under ignored `reports/`. The reviewed
+local acceptance result is copied to `docs/results/` so the numbers published
+in the README have a versioned machine-readable source. No license has been
+selected for the project source. PSM retains its CC BY 4.0 data license, and
+public data is downloaded from its original repository rather than copied into
+this repository.

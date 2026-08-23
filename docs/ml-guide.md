@@ -48,22 +48,25 @@ models/foundation-public-v1/
   READY              completion marker written last
 ```
 
-## Local calibration
+## Local adaptation and calibration
 
 Public datasets do not have the same metric semantics or scale as the checkout
-service. Calibration therefore records a local normal reference and threshold
-without refitting the tree model:
+service. The local step adds 80 boosting rounds from the labeled validation run,
+then computes the reference profile and false-alarm threshold from a separate
+normal baseline. The result is still one XGBoost model file:
 
 ```powershell
 uv run service-monitor calibrate `
   --foundation models/foundation-public-v1 `
   --baseline data/exports/train-baseline-20260919T132930.csv `
+  --validation data/exports/validation-20260919T160854.csv `
   --out models/checkout-universal-v1
 ```
 
-The normal baseline supplies five medians, five IQR scales, and the 99.5th
-percentile model-score threshold. This is fast and only needs the baseline
-recording already collected for the service.
+The validation recording supplies labeled normal and fault windows for local
+adaptation. The normal baseline independently supplies five medians, five IQR
+scales, and the 99.5th percentile model-score threshold. The untouched test
+recording is not used by either step.
 
 The calibrated artifact adds `profile.json`, `calibration.json`, and service
 metadata. Model and schema checksums are verified before XGBoost loads the UBJ
@@ -83,8 +86,9 @@ uv run service-monitor evaluate `
 The report compares the ML model with the existing static latency, error, and
 memory baseline. It records fault recall, false incidents per observable normal
 hour, feature coverage, detection delay, per-fault results, and incident
-lifecycles. The artifact remains marked experimental until this result is
-reviewed.
+lifecycles. Runtime loading remains an explicit opt-in through
+`--allow-experimental`, so deployment cannot happen accidentally from a newly
+calibrated artifact.
 
 ## Live behavior
 

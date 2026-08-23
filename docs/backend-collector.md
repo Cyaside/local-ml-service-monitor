@@ -87,11 +87,12 @@ They identify known fault windows when validation and test reports are calculate
 ## Calibrate and evaluate the public model
 
 ```powershell
-uv run service-monitor calibrate --foundation models/foundation-public-v1 --baseline data/exports/train-baseline-20260919T132930.csv --out models/checkout-universal-v1
+uv run service-monitor calibrate --foundation models/foundation-public-v1 --baseline data/exports/train-baseline-20260919T132930.csv --validation data/exports/validation-20260919T160854.csv --out models/checkout-universal-v1
 uv run service-monitor evaluate --model models/checkout-universal-v1 --input data/exports/test-20260919T180539.csv --report reports/checkout-universal-v1-test.json
 ```
 
-The foundation classifier is trained in the Colab notebook. The local baseline
+The foundation classifier is trained in the Colab notebook. Local validation
+adds a small service-specific update, and the local baseline
 must contain normal observations only. Test data contains normal observations
 and labeled faults and stays untouched until this final evaluation.
 

@@ -20,6 +20,7 @@ def main():
     p = commands.add_parser("calibrate")
     p.add_argument("--foundation", required=True)
     p.add_argument("--baseline", required=True)
+    p.add_argument("--validation")
     p.add_argument("--out", required=True)
     p.add_argument("--threshold-quantile", type=float, default=.995)
     p = commands.add_parser("evaluate")
@@ -59,7 +60,7 @@ def main():
                               "training_seconds": result["training_seconds"]}, indent=2))
         elif args.command == "calibrate":
             result = calibrate(args.foundation, args.baseline, args.out,
-                               args.threshold_quantile)
+                               args.threshold_quantile, args.validation)
             print(json.dumps({"model": args.out,
                               "calibration_seconds": result["calibration_seconds"],
                               "threshold": result["threshold"]}, indent=2))

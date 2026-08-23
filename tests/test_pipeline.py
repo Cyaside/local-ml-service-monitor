@@ -94,8 +94,10 @@ def test_foundation_calibration_roundtrip_and_evaluation(data, foundation, tmp_p
     foundation_metadata["sklearn_version"] = "Colab-installed-version"
     foundation_metadata_path.write_text(json.dumps(foundation_metadata))
     model_dir = tmp_path / "model"
-    metadata = calibrate(foundation, data / "calibration.csv", model_dir)
+    metadata = calibrate(foundation, data / "calibration.csv", model_dir,
+                         validation_path=data / "validation.csv")
     assert metadata["smoke_only"] and metadata["model_family"] == "XGBClassifier"
+    assert metadata["local_adaptation"]["faults"] == 3
     with pytest.raises(ValueError, match="Synthetic"):
         Predictor(model_dir)
     predictor = Predictor(model_dir, allow_synthetic=True)

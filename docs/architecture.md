@@ -4,35 +4,41 @@
 
 ## Training and runtime boundary
 
-```text
-Google Colab
-  PSM + SMD
-      │
-      ▼
-  per-source robust normalization
-      │
-      ▼
-  16 universal temporal features
-      │
-      ▼
-  one XGBClassifier trained with CUDA
-      │
-      ▼
-  foundation artifact
+```mermaid
+flowchart TB
+    subgraph foundation[Foundation training · Google Colab]
+        public[PSM and SMD telemetry] --> normalize[Robust normalization per source]
+        normalize --> features[31-sample windows and 16 temporal features]
+        features --> foundationModel[XGBoost foundation trained with CUDA]
+    end
 
-Laptop
-  existing normal baseline ──> local profile + threshold
-                                      │
-checkout service ──> collector ──> universal features ──> classifier
-                           │                                │
-                           ▼                                ▼
-                        SQLite                          incidents
+    subgraph adaptation[Service adaptation · Laptop]
+        validation[Labeled validation recording] --> localRounds[80 service-specific rounds]
+        foundationModel --> localRounds
+        baseline[Normal baseline] --> profile[Local median and IQR profile]
+        baseline --> threshold[Normal-score threshold]
+        localRounds --> artifact[Final service model]
+        profile --> artifact
+        threshold --> artifact
+    end
+
+    subgraph runtime[Live monitoring · CPU]
+        service[Checkout service] --> collector[Telemetry collector]
+        collector --> liveFeatures[Rolling temporal features]
+        liveFeatures --> scorer[Anomaly scoring]
+        artifact --> scorer
+        scorer --> lifecycle[Incident lifecycle]
+        collector --> sqlite[(SQLite telemetry)]
+        lifecycle --> sqlite
+        lifecycle --> terminal[CLI monitor]
+    end
 ```
 
-Training the tree model and processing the public datasets happen in Colab.
-The laptop performs a small calibration pass and single-row inference every ten
-seconds. Numerical libraries are limited to one thread during calibration and
-inference.
+Training the foundation model and processing the public datasets happen in
+Colab. The laptop adds 80 boosting rounds from the labeled validation recording,
+calibrates the threshold from a separate normal baseline, and performs
+single-row inference every ten seconds. Numerical libraries are limited to one
+thread during local work and inference.
 
 ## Source layout
 
