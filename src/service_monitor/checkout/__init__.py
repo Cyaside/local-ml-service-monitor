@@ -1,0 +1,1 @@
+"""Instrumented local checkout service."""

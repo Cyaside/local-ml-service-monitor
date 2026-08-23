@@ -1,0 +1,43 @@
+# Python environment and caches
+/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Build and test output
+/build/
+/dist/
+*.egg-info/
+.coverage
+.coverage.*
+/htmlcov/
+/coverage.xml
+
+# Generated telemetry, models, jobs, and reports
+/data/
+/models/
+/runs/
+/reports/
+*.log
+*.joblib
+*.pkl
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.writer.lock
+
+# Private planning documents
+/local-ml-service-monitor-plan/
+/local-ml-service-monitor-plan.zip
+
+# Local secrets, editors, and OS
+.env
+.env.*
+!.env.example
+/.vscode/
+/.idea/
+.DS_Store
+Thumbs.db

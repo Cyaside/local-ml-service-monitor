@@ -1,0 +1,32 @@
+[project]
+name = "local-ml-service-monitor"
+version = "0.1.0"
+description = "CPU-only telemetry anomaly detection pipeline"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2,<3",
+    "pandas>=2.2,<3",
+    "scikit-learn>=1.6,<2",
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.30,<1",
+    "httpx>=0.27,<1",
+    "psutil>=6,<8",
+    "portalocker>=3,<4",
+    "xgboost-cpu==3.1.3",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+service-monitor = "service_monitor.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/service_monitor"]

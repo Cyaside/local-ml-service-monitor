@@ -1,0 +1,36 @@
+name: ml-service-monitor
+x-runtime: &runtime
+  image: local-ml-service-monitor:dev
+  build: .
+  init: true
+  cpus: 1.0
+  mem_limit: 512m
+  security_opt:
+    - no-new-privileges:true
+services:
+  backend:
+    <<: *runtime
+    command: [serve, --host, 0.0.0.0, --port, '8010', --service-id, checkout-container]
+    ports:
+      - '127.0.0.1:8012:8010'
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8010/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  traffic:
+    <<: *runtime
+    command: [traffic, --url, 'http://backend:8010', --duration-minutes, '30', --profile, normal-cycle]
+    depends_on:
+      backend:
+        condition: service_healthy
+  collector:
+    <<: *runtime
+    command: [collect, --url, 'http://backend:8010', --duration-minutes, '30', --db, /app/data/container.sqlite]
+    volumes:
+      - telemetry:/app/data
+    depends_on:
+      backend:
+        condition: service_healthy
+volumes:
+  telemetry:
